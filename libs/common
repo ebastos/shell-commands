@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+
+# Setup colors for use in echo statements
+# https://stackoverflow.com/a/5947802/1826109
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;94m'
+NC='\033[0m' # No Color
+
+function common::load_config() {
+    local config_file="$1"
+    if [[ ! -f "$config_file" ]]; then
+        echo "Error: Config file not found at $config_file"
+        exit 1
+    fi
+    source "$config_file"
+}
+
+function common::log_info() {
+    echo -e "${GREEN}[INFO]:${NC} $1"
+}
+
+function common::log_warn() {
+    echo -e "${YELLOW}[WARN]:${NC} $1"
+}
+
+function common::log_error() {
+    echo -e "${RED}[ERROR]:${NC} $1"
+}
+
+function common::log_debug() {
+    if [[ "$DEBUG" = true ]]; then
+        echo -e "${BLUE}[DEBUG]:${NC} $1"
+    fi
+}
+
+function common::log_to_file() {
+    local log_file="$HOME/.$script_name.log"
+    local message="$@"
+    local timestamp=$(date +"%Y-%m-%d %T")
+    echo "[$timestamp] $message" >> "$log_file"
+}

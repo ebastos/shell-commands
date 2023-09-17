@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+function hello_show_help() {
+    echo "Usage: $script_name hello [OPTIONS] [NAME]"
+    echo "Say hello to NAME, or to 'World' if NAME is not provided."
+    echo ""
+    echo "Optional flags:"
+    echo "  -d, --display-time  Show the current time"
+    echo "  -h --help           Show this help message"
+}
+
+function hello_describe() {
+    echo "Greet a user by name."
+}
+
+function hello_run() {
+    local name="World"
+    local display_time=false
+
+    common::log_debug "Executed sub-command $cmd with arguments $@"
+
+    # Using getopt for parsing command-line options
+    TEMP=$(getopt -o dh --long display-time,help -- "$@")
+    if [ $? != 0 ]; then
+        echo "Error: Incorrect options provided"
+    exit 1
+    fi
+
+    eval set -- "$TEMP"
+
+    # Parse the normalized arguments
+    while true; do
+    case "$1" in
+        -d|--display-time)
+        display_time=true; shift ;;
+        -h | --help)
+        hello_show_help
+        exit 0 ;;
+        --)
+        shift; break ;;
+        *)
+        echo "Invalid option"; exit 1 ;;
+    esac
+    done
+
+    # Any remaining arguments are considered names
+    if [[ "$#" -gt 0 ]]; then
+        name="$@"
+    fi
+
+    echo -n "Hello, $name!"
+
+    if [ "$display_time" = true ]; then
+        current_time=$(date +"%I %p")
+        echo " It is $current_time."
+    else
+        echo
+    fi
+}
+

@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+bye_run() {
+
+    CMD_OPTIONS=$(getopt -o h --long help -- "$@")
+    eval set -- "$CMD_OPTIONS"
+
+    # Parse the normalized arguments
+    while true; do
+    case "$1" in
+        -h | --help)
+        bye_show_help
+        exit 0 ;;
+        --)
+        shift; break ;;
+        *)
+        echo "Invalid option"; exit 1 ;;
+    esac
+    done
+
+    echo "Stopping the program..."
+    if [ "$DEBUG" = true ]; then
+        echo "Debug: Executed command $cmd with arguments $@"
+    fi
+}
+
+bye_describe() {
+    echo "Exit the program."
+}
+
+bye_show_help() {
+    echo "Usage: $script_name bye [OPTIONS]"
+    echo "Exit the program."
+    echo ""
+    echo "Optional flags:"
+    echo "  -h, --help  Show this help message"
+}
