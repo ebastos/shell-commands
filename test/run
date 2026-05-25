@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# test/run
+# Convenience wrapper to execute the bats test suite.
+#
+# Prerequisites (one-time):
+#   macOS: brew install bats-core gnu-getopt
+#   Linux (Debian/Ubuntu): apt-get install bats  (note: may be older version)
+#                          or install bats-core from https://github.com/bats-core/bats-core
+#
+# Usage:
+#   ./test/run            # run all tests
+#   ./test/run --filter hello   # run only matching tests
+#   ./test/run -x         # stop on first failure (bats flag)
+#
+# This script ensures it is run from the project root and forwards all args to bats.
+
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+if ! command -v bats >/dev/null 2>&1; then
+  echo "Error: bats not found in PATH." >&2
+  echo "Install bats-core first:" >&2
+  echo "  macOS:   brew install bats-core" >&2
+  echo "  Then (for GNU getopt on macOS): brew install gnu-getopt" >&2
+  exit 1
+fi
+
+exec bats test "$@"

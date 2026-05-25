@@ -37,6 +37,22 @@ For the libraries, we are using `::` for namespacing instead of the `_` we used 
 
 To keep things easy to read and understand it is recommended that functions internal to commands be prefixed with a single `_` 
 
-## TODO
+## Testing
 
-Need to add unit tests using `bats`
+Tests are written with the [bats](https://bats-core.readthedocs.io/) framework (Bash Automated Testing System).
+
+### Prerequisites (macOS)
+
+```bash
+brew install bats-core gnu-getopt
+```
+
+### Running the suite
+
+```bash
+./test/run
+```
+
+All 16 initial tests cover the dispatcher, dynamic `--help`, sub-commands (`hello`/`bye`), debug mode, config handling, and side-effect logging. Tests run in complete isolation (fresh `$HOME` + config per test) so they are safe on any machine.
+
+See `test/test_helper.bash` and `AGENTS.md` for layout, helpers, and how to add tests when extending the CLI.
